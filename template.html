@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Purchase Order</title>
+<style>
+  @page { size: letter; {{page_margin}} }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: #ffffff; }
+  body { font-family: Arial, "Helvetica Neue", Helvetica, sans-serif; color: #000000; }
+
+  .page {
+    width: 8.5in;
+    padding: 0.34in 0.42in 0.28in;
+    background: #ffffff;
+  }
+  .page.single { height: 11in; display: flex; flex-direction: column; overflow: hidden; }
+  .page.multi { height: auto; }
+  @media print {
+    .page.multi { width: auto; padding: 0; }
+  }
+
+  .header { display: flex; align-items: flex-start; }
+  .logo { width: 250px; height: auto; }
+  .company { margin-left: 0; padding-top: 6px; }
+  .company-info { margin-top: 4px; font-size: 9.5px; line-height: 1.5; }
+  .title-block { margin-left: auto; text-align: right; }
+  .doc-title { font-size: 27px; font-weight: bold; line-height: 1.08; letter-spacing: 0.4px; }
+  .po-box {
+    display: inline-block; margin-top: 9px;
+    border: 2px solid #9b1c1c; padding: 4px 12px 5px;
+    font-size: 16px; font-weight: bold; white-space: nowrap;
+  }
+  .po-box .num { color: #9b1c1c; }
+
+  .name-row { display: flex; margin-top: 24px; }
+  .name-box {
+    flex: 0 0 72%;
+    border: 1.5px solid #000000; min-height: 58px;
+    padding: 7px 10px 6px;
+  }
+  .name-box .lbl { font-weight: bold; font-size: 12px; margin-right: 6px; }
+  .name-box .val { font-size: 12px; text-transform: uppercase; }
+  .date-block { flex: 1 1 auto; padding: 9px 0 0 20px; }
+  .date-line { display: flex; justify-content: space-between; margin-bottom: 9px; font-size: 11.5px; }
+  .date-line .lbl { font-weight: bold; }
+  .red { color: #9b1c1c; font-weight: bold; }
+
+  .items-wrap { margin-top: 16px; }
+  table.items {
+    width: 100%;
+    border-collapse: collapse; table-layout: fixed;
+    border: 1.5px solid #000000;
+  }
+  table.items th, table.items td {
+    border: 1px solid #000000;
+    padding: 2px 7px; font-size: 11px; vertical-align: middle;
+  }
+  table.items thead { display: table-header-group; }
+  table.items thead th {
+    background: #ececec; font-weight: bold; text-align: left;
+    padding: 4px 7px;
+  }
+  table.items tbody td { height: 26px; }
+  table.items tr { page-break-inside: avoid; break-inside: avoid; }
+  td.c, th.c { text-align: center; }
+  td.r, th.r { text-align: right; }
+
+  .bottom-row {
+    display: flex; margin-top: 16px; align-items: flex-start;
+    page-break-inside: avoid; break-inside: avoid;
+  }
+  .notes { flex: 0 0 48%; font-size: 8.6px; font-weight: bold; line-height: 1.55; }
+  .notes .note-head { margin-bottom: 1px; }
+  .total-wrap { flex: 1 1 auto; display: flex; justify-content: flex-end; padding-top: 6px; }
+  .total-box {
+    border: 2px solid #000000;
+    min-width: 320px; padding: 12px 20px;
+    display: flex; justify-content: space-between; align-items: baseline;
+    font-size: 18px; font-weight: bold;
+  }
+  .total-box .lbl { margin-right: 30px; }
+
+  .signatures {
+    display: flex; padding-top: 30px;
+    page-break-inside: avoid; break-inside: avoid;
+  }
+  .page.single .signatures { margin-top: auto; }
+  .page.multi .signatures { margin-top: 10px; }
+  .sig-col { flex: 1 1 33.33%; padding-right: 26px; }
+  .sig-label { font-size: 11.5px; }
+  .sig-name { font-size: 12px; font-weight: bold; min-height: 40px; padding-top: 24px; }
+  .sig-caption { font-size: 10px; margin-top: 2px; }
+  .sig-date { font-size: 10px; margin-top: 3px; }
+</style>
+</head>
+<body>
+<div class="page {{page_mode}}">
+
+  <div class="header">
+    <div class="brand">
+      <img class="logo" src="{{logo_data}}" alt="Takara logo">
+      <div class="company">
+        <div class="company-info">
+        Email Add.: takaraexport@gmail.com<br>
+        Telefax No.: +632 86609256<br>
+        #18 Gómez St. Kapalaran Subd. Brgy. San Juan, Taytay Rizal
+      </div>
+      </div>
+    </div>
+    <div class="title-block">
+      <div class="doc-title">PURCHASE<br>ORDER</div>
+      <div class="po-box">P.O. No.: <span class="num">{{po_no}}</span></div>
+    </div>
+  </div>
+
+  <div class="name-row">
+    <div class="name-box">
+      <span class="lbl">NAME:</span><span class="val">{{name}}</span>
+    </div>
+    <div class="date-block">
+      <div class="date-line"><span class="lbl">Order Date:</span><span class="red">{{order_date}}</span></div>
+      <div class="date-line"><span class="lbl">Delivery Date:</span><span class="red">{{delivery_date}}</span></div>
+    </div>
+  </div>
+
+  <div class="items-wrap">
+    <table class="items">
+      <colgroup>
+        <col style="width:13%">
+        <col style="width:38%">
+        <col style="width:8%">
+        <col style="width:13%">
+        <col style="width:9%">
+        <col style="width:19%">
+      </colgroup>
+      <thead>
+        <tr>
+          <th>ITEM NO.</th>
+          <th>DESCRIPTION</th>
+          <th class="c">QTY.</th>
+          <th class="r">RATE</th>
+          <th>U/M</th>
+          <th class="r">AMOUNT</th>
+        </tr>
+      </thead>
+      <tbody>
+{{items_rows}}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="bottom-row">
+    <div class="notes">
+      <div class="note-head">NOTE:</div>
+      <div>- ALL ACCESSORIES &amp; MATERIALS ARE CHARGEABLE.</div>
+      <div>- PLEASE MAKE COUNTER SAMPLE BEFORE PRODUCTION.</div>
+      <div>- PARTIAL DELIVERY ALLOWED.</div>
+      <div>- PLEASE FOLLOW DUE DATE TO AVOID PENALTY CHARGES &amp; CANCELLATION.</div>
+      <div>- PLEASE MAKE DELIVERY RECEIPT DURING DELIVERY "NO D.R. NO PAYMENT".</div>
+      <div>- 4% PENALTY FOR EVERY LATE DELIVERIES.</div>
+    </div>
+    <div class="total-wrap">
+      <div class="total-box"><span class="lbl">Total Amount</span><span class="val">PHP {{total}}</span></div>
+    </div>
+  </div>
+
+  <div class="signatures">
+    <div class="sig-col">
+      <div class="sig-label">Approved by:</div>
+      <div class="sig-name">{{approved_by}}</div>
+      <div class="sig-caption">Signature over Printed Name</div>
+      <div class="sig-date">Date: {{approved_date}}</div>
+    </div>
+    <div class="sig-col">
+      <div class="sig-label">Verified by:</div>
+      <div class="sig-name">{{verified_by}}</div>
+      <div class="sig-caption">Signature over Printed Name</div>
+      <div class="sig-date">Date: {{verified_date}}</div>
+    </div>
+    <div class="sig-col">
+      <div class="sig-label">Received by:</div>
+      <div class="sig-name">{{received_by}}</div>
+      <div class="sig-caption">Signature over Printed Name</div>
+      <div class="sig-date">Date: {{received_date}}</div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

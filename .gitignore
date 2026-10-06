@@ -1,0 +1,10 @@
+# Executables and build output
+*.exe
+build/
+dist/
+__pycache__/
+*.pyc
+
+# Generated documents and local records (may contain customer data)
+output/
+orders/
